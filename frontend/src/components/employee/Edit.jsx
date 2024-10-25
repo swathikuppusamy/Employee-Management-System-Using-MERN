@@ -26,8 +26,6 @@ const Edit = () => {
                     },
                 });
                 
-                console.log("Employee Data:", response.data); // Log the entire response data
-    
                 if (response.data.success && response.data.employee) {
                     setEmployee(response.data.employee);
                 }
@@ -40,29 +38,20 @@ const Edit = () => {
     
         fetchEmployee();
     }, [id]);
-    
 
     const handleChange = (e) => {
-        const { name, value, files } = e.target;
-        if (name === "image") {
-            setEmployee((prevData) => ({ ...prevData, [name]: files[0] }));
-        } else {
-            setEmployee((prevData) => ({ ...prevData, [name]: value }));
-        }
+        const { name, value } = e.target;
+        setEmployee((prevData) => ({ ...prevData, [name]: value }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formDataObj = new FormData();
-        Object.keys(employee).forEach((key) => {
-            formDataObj.append(key, employee[key]);
-        });
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.put(`http://localhost:5000/api/employee/${id}`, formDataObj, {
+            const response = await axios.put(`http://localhost:5000/api/employee/${id}`, employee, {
                 headers: {
-                    "Authorization": `Bearer ${token}`
-                }
+                    Authorization: `Bearer ${token}`,
+                },
             });
             if (response.data.success) {
                 navigate("/admin-dashboard/employees");
@@ -87,7 +76,7 @@ const Edit = () => {
                                 <input
                                     type="text"
                                     name="name"
-                                    value={employee.name || ''}
+                                    value={employee.userId ? employee.userId.name : ''}
                                     onChange={handleChange}
                                     className="w-full px-4 py-2 border rounded-md"
                                     required
@@ -100,7 +89,7 @@ const Edit = () => {
                                 <input
                                     type="email"
                                     name="email"
-                                    value={employee.email || ''}
+                                    value={employee.userId ? employee.userId.email : ''}
                                     onChange={handleChange}
                                     placeholder="Insert Email"
                                     className="w-full px-4 py-2 border rounded-md"
@@ -227,17 +216,6 @@ const Edit = () => {
                                     <option value="Admin">Admin</option>
                                     <option value="Employee">Employee</option>
                                 </select>
-                            </div>
-
-                            {/* Upload Image */}
-                            <div className="mb-4">
-                                <label className="block text-gray-700">Upload Image</label>
-                                <input
-                                    type="file"
-                                    name="image"
-                                    onChange={handleChange}
-                                    className="w-full px-4 py-2 border rounded-md"
-                                />
                             </div>
                         </div>
                         {/* Submit Button */}
