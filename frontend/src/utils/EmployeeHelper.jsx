@@ -20,6 +20,7 @@ export const columns = [
     name: "Department",
     center :"true",
     selector: (row) => row.dep_name,
+    sortable: true,
     cell: (row) => <div className="px-2 py-1 text-base">{row.dep_name}</div>, // Set font size here
   },
   {
@@ -56,6 +57,26 @@ export const fetchDepartments = async () => {
   return departments;
 };
 
+export const getEmployees = async (id) => {
+  let employees;
+  try {
+    const response = await axios.get(`http://localhost:5000/api/employee/department/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (response.data.success) {
+      employees = response.data.employees;
+    }
+  } catch (error) {
+    if (error.response && !error.response.data.success) {
+      alert(error.response.data.error);
+    }
+  }
+
+  return employees;
+};
+
 export const EmployeeButtons = ({ _id }) => {
   const navigate = useNavigate();
 
@@ -72,7 +93,10 @@ export const EmployeeButtons = ({ _id }) => {
 
         Edit
       </button>
-      <button className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition duration-200 text-base">
+      <button className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition duration-200 text-base"  
+      onClick={() => navigate(`/admin-dashboard/employees/salary/${_id}`)} >
+
+      
         Salary
       </button>
       <button className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-200 text-base">

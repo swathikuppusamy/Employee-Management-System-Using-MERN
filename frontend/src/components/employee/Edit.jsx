@@ -76,7 +76,8 @@ const Edit = () => {
                                 <input
                                     type="text"
                                     name="name"
-                                    value={employee.userId ? employee.userId.name : ''}
+                                    //value={employee.userId ? employee.userId.name : ''}
+                                    value={employee.userId ? employee.userId.name : ' '}
                                     onChange={handleChange}
                                     className="w-full px-4 py-2 border rounded-md"
                                     required
@@ -89,7 +90,8 @@ const Edit = () => {
                                 <input
                                     type="email"
                                     name="email"
-                                    value={employee.userId ? employee.userId.email : ''}
+                                    value={employee.userId ? employee.userId.email : ' '}
+                                  // value={employee.userId.email}
                                     onChange={handleChange}
                                     placeholder="Insert Email"
                                     className="w-full px-4 py-2 border rounded-md"

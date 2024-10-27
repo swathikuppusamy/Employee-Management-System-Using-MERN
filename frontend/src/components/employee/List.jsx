@@ -7,6 +7,7 @@ import DataTable from 'react-data-table-component';
 const List = () => {
   const [employees, setEmployees] = useState([]);
   const [empLoading, setEmpLoading] = useState(false);
+  const [filterdEmployee,setFilteredEmployees]=useState([])
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -30,6 +31,7 @@ const List = () => {
           }));
 
           setEmployees(data);
+          setFilteredEmployees(data)
         }
       } catch (error) {
         if (error.response && !error.response.data.success) {
@@ -43,6 +45,13 @@ const List = () => {
     fetchEmployees();
   }, []);
 
+  const handleFilter=(e)=>{
+    const records = employees.filter((emp)=>(
+      emp.name.toLowerCase().includes(e.target.value.toLowerCase())
+    ))
+    setFilteredEmployees(records)
+  }
+
   return (
     <div className="p-6">
       <div className="mb-4">
@@ -53,6 +62,7 @@ const List = () => {
           type="text"
           placeholder="Start typing employee name..."
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+         onChange={handleFilter}
         />
         <Link
           to="/admin-dashboard/add-employee"
@@ -61,12 +71,13 @@ const List = () => {
           Add Employee
         </Link>
       </div>
-      <div>
+      <div className='mt-6'>
         <DataTable
           columns={columns} 
-          data={employees} 
+          data={filterdEmployee} 
           progressPending={empLoading} 
           noDataComponent="No employees available" 
+          pagination
         />
       </div>
     </div>

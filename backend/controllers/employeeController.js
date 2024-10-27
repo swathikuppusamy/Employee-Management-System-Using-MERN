@@ -128,7 +128,8 @@ const updateEmployee = async (req, res) => {
         const updatedEmployee = await Employee.findByIdAndUpdate(
             id,
             {
-                
+                name,
+                email,
                 employeeId,
                 dob,
                 gender,
@@ -154,4 +155,17 @@ const updateEmployee = async (req, res) => {
 };
 
 
-export {addEmployee,upload,getEmployees,getEmployee,updateEmployee}
+const fetchEmployeesByDepId = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const employees = await Employee.find({ department: id }).populate('userId', { password: 0 }).populate("department");
+        return res.status(200).json({ success: true, employees });
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ success: false, error: "get employees by dep server error" });
+    }
+};
+
+
+
+export {addEmployee,upload,getEmployees,getEmployee,updateEmployee,fetchEmployeesByDepId}
