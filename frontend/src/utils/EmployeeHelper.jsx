@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
 export const columns = [
   {
@@ -94,12 +95,14 @@ export const EmployeeButtons = ({ _id }) => {
         Edit
       </button>
       <button className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition duration-200 text-base"  
-      onClick={() => navigate(`/admin-dashboard/employees/salary/${_id}`)} >
-
-      
+      onClick={() => navigate(`/admin-dashboard/employees/salary/${_id}`)}
+       >
         Salary
       </button>
-      <button className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-200 text-base">
+      <button className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-200 text-base"
+            onClick={() => navigate(`/admin-dashboard/employees/leaves/${_id}`)}
+
+      >
         Leave
       </button>
     </div>

@@ -3,7 +3,7 @@ import { useAuth } from "../../context/authContext";
 import { FaUser } from "react-icons/fa"; // Optional: Importing an icon
 
 const Navbar = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <nav className="bg-white shadow-md p-4 flex justify-between items-center">
@@ -15,7 +15,7 @@ const Navbar = () => {
         </p>
       </div>
       <div>
-        <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+        <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg" onClick={logout}>
           Logout
         </button>
       </div>

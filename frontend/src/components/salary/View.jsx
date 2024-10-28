@@ -1,16 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
 
 const View = () => {
-    const [salaries, setSalaries] = useState([]); // Changed from null to empty array
-    const [filteredSalaries, setFilteredSalaries] = useState([]); // Changed from null to empty array
+    const [salaries, setSalaries] = useState([]);
+    const [filteredSalaries, setFilteredSalaries] = useState([]);
     const { id } = useParams();
     let sno = 1;
+    const { user } = useAuth(); // Get user from context
 
+    // Fetch salaries data only when the user is loaded and available
     const fetchSalaries = async () => {
+        if (!user) return; // Exit if user is not yet available
         try {
-            const response = await axios.get(`http://localhost:5000/api/salary/${id}`, {
+            const response = await axios.get(`http://localhost:5000/api/salary/${id}/${user.role}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
@@ -29,23 +33,26 @@ const View = () => {
         }
     };
 
+    
+    // Call fetchSalaries only when user data is available
     useEffect(() => {
-        fetchSalaries();
-    }, []);
+        if (user) {
+            fetchSalaries();
+        }
+    }, [user, id]); // Run when user or id changes
 
+    // Filter salaries by employee ID based on input
     const handleFilterSalaries = (e) => {
         const query = e.target.value;
-        if (salaries) {
-            const filteredRecords = salaries.filter((salary) =>
-                salary.employeeId.employeeId.toLowerCase().includes(query.toLowerCase()) // Accessing nested employeeId
-            );
-            setFilteredSalaries(filteredRecords);
-        }
+        const filteredRecords = salaries.filter((salary) =>
+            salary.employeeId.employeeId.toLowerCase().includes(query.toLowerCase())
+        );
+        setFilteredSalaries(filteredRecords);
     };
 
     return (
         <>
-            {filteredSalaries.length === 0 ? ( // Check for empty array instead of null
+            {filteredSalaries.length === 0 ? (
                 <div>Loading ...</div>
             ) : (
                 <div className="overflow-x-auto p-5">
@@ -76,11 +83,11 @@ const View = () => {
                             <tbody>
                                 {filteredSalaries.map((salary) => (
                                     <tr
-                                        key={salary._id} // Use _id as the key
+                                        key={salary._id}
                                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                                     >
                                         <td className="px-6 py-3">{sno++}</td>
-                                        <td className="px-6 py-3">{salary.employeeId.employeeId}</td> {/* Accessing nested employeeId */}
+                                        <td className="px-6 py-3">{salary.employeeId.employeeId}</td>
                                         <td className="px-6 py-3">{salary.basicSalary}</td>
                                         <td className="px-6 py-3">{salary.allowances}</td>
                                         <td className="px-6 py-3">{salary.deductions}</td>

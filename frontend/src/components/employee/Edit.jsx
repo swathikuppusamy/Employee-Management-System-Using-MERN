@@ -5,9 +5,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 const Edit = () => {
     const [employee, setEmployee] = useState(null);
-    const [departments, setDepartments] = useState(null);
+    const [departments, setDepartments] = useState([]);
     const navigate = useNavigate();
     const { id } = useParams();
+
+    console.log(employee)
 
     useEffect(() => {
         const getDepartments = async () => {
@@ -38,11 +40,73 @@ const Edit = () => {
     
         fetchEmployee();
     }, [id]);
+//    const handleChange = (e) => {
+//     const { name, value } = e.target;
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setEmployee((prevData) => ({ ...prevData, [name]: value }));
-    };
+//     if (name in employee) {
+//         // For top-level fields in employee
+//         setEmployee((prevData) => ({ ...prevData, [name]: value }));
+//     } else if (name in employee.userId) {
+//         // For nested fields in userId
+//         setEmployee((prevData) => ({
+//             ...prevData,
+//             userId: {
+//                 ...prevData.userId,
+//                 [name]: value,
+//             },
+//         }));
+//     } else {
+//         console.warn(`Field ${name} does not exist in employee or userId.`);
+//     }
+// };
+
+// const handleChange = (e) => {
+//     const { name, value } = e.target;
+
+//     if (name in employee) {
+//         // For top-level fields in employee
+//         setEmployee((prevData) => ({ ...prevData, [name]: value }));
+//     } else if (name in employee.userId) {
+//         // For nested fields in userId
+//         setEmployee((prevData) => ({
+//             ...prevData,
+//             userId: {
+//                 ...prevData.userId,
+//                 [name]: value,
+//             },
+//         }));
+//     } else {
+//         console.warn(`Field ${name} does not exist in employee or userId.`);
+//     }
+// };
+// const handleChange = (e) => {
+//     const { name, value } = e.target;
+
+//     // Check if employee is not null before accessing its properties
+//     if (employee) {
+//         if (name in employee) {
+//             // For top-level fields in employee
+//             setEmployee((prevData) => ({ ...prevData, [name]: value }));
+//         } else if (employee.userId && name in employee.userId) {
+//             // For nested fields in userId
+//             setEmployee((prevData) => ({
+//                 ...prevData,
+//                 userId: {
+//                     ...prevData.userId,
+//                     [name]: value,
+//                 },
+//             }));
+//         } else {
+//             console.warn(`Field ${name} does not exist in employee or userId.`);
+//         }
+//     }
+// };
+const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEmployee((prevData) => ({ ...prevData, [name]: value }));
+};
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -65,7 +129,7 @@ const Edit = () => {
 
     return (
         <>
-            {departments && employee ? (
+            {departments.length > 0 && employee ? (
                 <div className="max-w-4xl mx-auto mt-10 bg-white p-2 rounded-md shadow-lg mt-2">
                     <h2 className="text-2xl font-semibold text-center mb-2">Edit Employee</h2>
                     <form onSubmit={handleSubmit}>
@@ -75,9 +139,8 @@ const Edit = () => {
                                 <label className="block text-gray-700">Name</label>
                                 <input
                                     type="text"
-                                    name="name"
-                                    //value={employee.userId ? employee.userId.name : ''}
-                                    value={employee.userId ? employee.userId.name : ' '}
+                                    name="name" // matches the key in userId
+                                    value={employee.userId.name || ''}
                                     onChange={handleChange}
                                     className="w-full px-4 py-2 border rounded-md"
                                     required
@@ -89,9 +152,8 @@ const Edit = () => {
                                 <label className="block text-gray-700">Email</label>
                                 <input
                                     type="email"
-                                    name="email"
-                                    value={employee.userId ? employee.userId.email : ' '}
-                                  // value={employee.userId.email}
+                                    name="email" // matches the key in userId
+                                    value={employee.userId.email || ''}
                                     onChange={handleChange}
                                     placeholder="Insert Email"
                                     className="w-full px-4 py-2 border rounded-md"
@@ -164,7 +226,7 @@ const Edit = () => {
                                 <label className="block text-gray-700">Department</label>
                                 <select
                                     name="department"
-                                    value={employee.department || ''}
+                                    value={employee.department ? employee.department._id : ''}
                                     onChange={handleChange}
                                     className="w-full px-4 py-2 border rounded-md"
                                     required
@@ -229,7 +291,9 @@ const Edit = () => {
                         </button>
                     </form>
                 </div>
-            ) : <div>Loading...</div>}
+            ) : (
+                <div>Loading...</div>
+            )}
         </>
     );
 };
