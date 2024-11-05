@@ -21,7 +21,7 @@ const AddDepartment = () => {
           const token = localStorage.getItem('token');
            //console.log("Token:", token); // Check the token in the console
 
-          const response= await axios.post('http://localhost:5000/api/department/add', department, {
+          const response= await axios.post('https://employee-backend-gules.vercel.app/api/department/add', department, {
             headers:{
                 "Authorization" : `Bearer ${token}`
             }

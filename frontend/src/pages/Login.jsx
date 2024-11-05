@@ -24,7 +24,7 @@ const Login = () => {
 
     try {
       // Make an API call to login endpoint (replace with your API)
-      const response = await axios.post("http://localhost:5000/api/auth/login", {
+      const response = await axios.post("https://employee-backend-gules.vercel.app/api/auth/login", {
         email,
         password,
         rememberMe,

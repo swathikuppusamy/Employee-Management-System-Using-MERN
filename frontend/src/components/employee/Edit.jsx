@@ -112,7 +112,7 @@ const handleChange = (e) => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.put(`http://localhost:5000/api/employee/${id}`, employee, {
+            const response = await axios.put(`https://employee-backend-gules.vercel.app/api/employee/${id}`, employee, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

@@ -47,7 +47,7 @@ const EditDepartment = () => {
           const token = localStorage.getItem('token');
            //console.log("Token:", token); // Check the token in the console
 
-          const response= await axios.put(`http://localhost:5000/api/department/${id}`, department, {
+          const response= await axios.put(`https://employee-backend-gules.vercel.app/api/department/${id}`, department, {
             headers:{
                 "Authorization" : `Bearer ${token}`
             }
